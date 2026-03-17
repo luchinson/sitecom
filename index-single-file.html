@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Комьюнити — управляемый нетворкинг в Telegram для мероприятий и сообществ</title>
+  <meta name="description" content="Комьюнити — Telegram-first сервис для организаторов мероприятий и сообществ: управляемый нетворкинг, мэтчи, аналитика и быстрый запуск без отдельного приложения." />
+  <meta name="theme-color" content="#0A1020" />
+  <meta property="og:title" content="Комьюнити — управляемый нетворкинг в Telegram" />
+  <meta property="og:description" content="Запускайте полезные знакомства, мэтчи и аналитику для события или сообщества без отдельного приложения." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ru_RU" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+:root {
+  --bg: #07101f;
+  --bg-soft: rgba(255, 255, 255, 0.05);
+  --surface: rgba(255, 255, 255, 0.08);
+  --surface-strong: rgba(255, 255, 255, 0.12);
+  --surface-card: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+  --text: #edf3ff;
+  --muted: #aab6d4;
+  --line: rgba(255, 255, 255, 0.11);
+  --primary: #6d7cff;
+  --primary-2: #43d8b2;
+  --primary-3: #7fd6ff;
+  --danger: #ff6b7a;
+  --success: #61f0c2;
+  --shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+  --radius: 28px;
+  --radius-md: 22px;
+  --radius-sm: 16px;
+  --container: 1180px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(109, 124, 255, 0.18), transparent 22%),
+    radial-gradient(circle at 85% 15%, rgba(67, 216, 178, 0.12), transparent 18%),
+    radial-gradient(circle at 50% 80%, rgba(127, 214, 255, 0.12), transparent 24%),
+    linear-gradient(180deg, #07101f 0%, #091425 48%, #060d18 100%);
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border-radius: 16px;
+  padding: 14px 16px;
+  outline: 0;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.25s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgba(109, 124, 255, 0.78);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(237, 243, 255, 0.45);
+}
+
+select option {
+  color: #08111f;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+.container {
+  width: min(calc(100% - 32px), var(--container));
+  margin: 0 auto;
+}
+
+.section {
+  padding: 96px 0;
+  position: relative;
+}
+
+.section-accent {
+  background: linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.04));
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 58px 58px;
+  mask-image: radial-gradient(circle at center, black 35%, transparent 90%);
+  opacity: 0.26;
+}
+
+.site-glow {
+  position: fixed;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(90px);
+  z-index: -2;
+  pointer-events: none;
+}
+
+.glow-1 {
+  top: -120px;
+  left: -80px;
+  background: rgba(109, 124, 255, 0.28);
+}
+
+.glow-2 {
+  right: -100px;
+  bottom: 10%;
+  background: rgba(67, 216, 178, 0.18);
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(8, 14, 26, 0.68);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nav {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 800;
+}
+
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  display: inline-grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 18px 35px rgba(109, 124, 255, 0.28);
+}
+
+.brand-text {
+  letter-spacing: -0.02em;
+}
+
+.nav-links,
+.footer-links,
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.nav-links a,
+.footer-links a {
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.nav-links a:hover,
+.footer-links a:hover {
+  color: var(--text);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.eyebrow.small {
+  font-size: 0.74rem;
+  padding: 7px 11px;
+}
+
+.hero {
+  padding-top: 76px;
+}
+
+.hero-grid,
+.demo-grid,
+.audience-grid,
+.contact-grid {
+  display: grid;
+  gap: 28px;
+}
+
+.hero-grid {
+  grid-template-columns: 1.02fr 0.98fr;
+  align-items: center;
+}
+
+.hero-copy h1 {
+  margin: 18px 0 18px;
+  font-size: clamp(2.7rem, 5.5vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+}
+
+.hero-copy h1 span {
+  background: linear-gradient(135deg, #ffffff 10%, #8ed3ff 58%, #72f0cc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.lead,
+.section-head p,
+.contact-text,
+.form-hint,
+.demo-panel-head p,
+.feature-card p,
+.fit-row p,
+.list-check li,
+.bubble,
+.mini-profile p,
+.soft-card p,
+.chart-card span,
+.dashboard-box span,
+.footer p,
+.demo-bio,
+.match-contact,
+.match-result p,
+.demo-finish p,
+.comment-box label {
+  color: var(--muted);
+}
+
+.lead {
+  max-width: 650px;
+  font-size: 1.05rem;
+  line-height: 1.78;
+}
+
+.hero-actions,
+.contact-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 30px 0 28px;
+}
+
+.hero-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.metric-chip,
+.stat-box,
+.dashboard-box,
+.contact-card {
+  padding: 18px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+}
+
+.metric-chip strong,
+.stat-box strong,
+.dashboard-box strong {
+  display: block;
+  font-size: 1.35rem;
+  margin-bottom: 6px;
+}
+
+.metric-chip span,
+.stat-box span,
+.dashboard-box span {
+  display: block;
+  line-height: 1.5;
+}
+
+.btn,
+.goal-chip,
+.quick-comment,
+.demo-btn {
+  border: 0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-weight: 700;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:hover,
+.goal-chip:hover,
+.quick-comment:hover,
+.demo-btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn-primary,
+.demo-btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), #46a2ff);
+  box-shadow: 0 18px 34px rgba(84, 118, 255, 0.28);
+}
+
+.btn-secondary,
+.btn-ghost,
+.demo-btn-muted,
+.demo-btn-like,
+.goal-chip,
+.quick-comment {
+  color: var(--text);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.btn-secondary:hover,
+.btn-ghost:hover,
+.demo-btn-muted:hover,
+.demo-btn-like:hover,
+.goal-chip:hover,
+.quick-comment:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.btn-sm {
+  padding: 11px 15px;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.card,
+.soft-card {
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: var(--shadow);
+}
+
+.card {
+  border-radius: var(--radius);
+  background: var(--surface-card);
+}
+
+.soft-card {
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.05);
+}
+
+.hero-showcase {
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-showcase::after {
+  content: "";
+  position: absolute;
+  inset: auto -15% -55% auto;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(67,216,178,0.26), transparent 68%);
+  pointer-events: none;
+}
+
+.showcase-topbar,
+.demo-phone-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 4px 6px 16px;
+}
+
+.showcase-topbar p,
+.demo-phone-topbar strong {
+  margin: 0;
+}
+
+.signal {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.signal-green { background: #61f0c2; }
+.signal-yellow { background: #ffd36a; }
+.signal-red { background: #ff7b88; }
+
+.showcase-grid {
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.phone-shell,
+.demo-chat-phone {
+  padding: 14px;
+  border-radius: 34px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.phone-notch {
+  width: 40%;
+  height: 28px;
+  background: rgba(0,0,0,0.42);
+  border-radius: 0 0 16px 16px;
+  margin: -14px auto 10px;
+}
+
+.phone-screen,
+.demo-screen {
+  min-height: 100%;
+  padding: 18px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(109,124,255,0.12), transparent 30%),
+    rgba(7, 12, 22, 0.86);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.bubble {
+  max-width: 90%;
+  padding: 12px 14px;
+  border-radius: 18px;
+  line-height: 1.55;
+  margin-bottom: 12px;
+}
+
+.bubble-bot {
+  background: rgba(255,255,255,0.07);
+  border-top-left-radius: 8px;
+}
+
+.bubble-user {
+  margin-left: auto;
+  background: linear-gradient(135deg, rgba(109,124,255,0.2), rgba(70,162,255,0.16));
+  border-top-right-radius: 8px;
+}
+
+.mini-profile,
+.demo-profile-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mini-profile {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.mini-avatar,
+.avatar-badge {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  border-radius: 16px;
+  display: inline-grid;
+  place-items: center;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+}
+
+.mini-tags,
+.demo-tags,
+.goal-group,
+.quick-comments,
+.demo-actions,
+.demo-stats,
+.dashboard-grid,
+.fit-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mini-tags {
+  margin-top: 14px;
+}
+
+.mini-tags span,
+.demo-tags span {
+  padding: 9px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.9rem;
+  color: #d9e4ff;
+}
+
+.mini-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.mini-actions button {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.mini-actions button.active {
+  background: linear-gradient(135deg, rgba(109,124,255,0.22), rgba(67,216,178,0.14));
+}
+
+.showcase-side {
+  display: grid;
+  gap: 18px;
+}
+
+.floating-card,
+.chart-card {
+  padding: 20px;
+}
+
+.floating-card strong {
+  display: block;
+  font-size: 1.25rem;
+  margin-top: 6px;
+}
+
+.floating-card ul {
+  margin: 14px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  display: grid;
+  gap: 9px;
+}
+
+.chart-card {
+  min-height: 190px;
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-card span {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
+
+.bar {
+  width: 46px;
+  border-radius: 18px 18px 8px 8px;
+  background: linear-gradient(180deg, rgba(109,124,255,0.95), rgba(67,216,178,0.75));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
+}
+
+.bar-1 { height: 74px; }
+.bar-2 { height: 118px; }
+.bar-3 { height: 148px; }
+.bar-4 { height: 104px; }
+
+.section-head {
+  max-width: 780px;
+  margin-bottom: 42px;
+}
+
+.section-head h2 {
+  margin: 14px 0 14px;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.feature-card,
+.demo-panel,
+.demo-phone,
+.flow-card,
+.fit-card,
+.form-card,
+.dashboard-preview {
+  padding: 24px;
+}
+
+.feature-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(255,255,255,0.08);
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+}
+
+.feature-card h3,
+.flow-card h3,
+.fit-card h3,
+.demo-panel h3,
+.dashboard-preview h3 {
+  margin-bottom: 10px;
+}
+
+.demo-grid {
+  grid-template-columns: 0.92fr 1.08fr;
+  align-items: start;
+}
+
+.demo-panel-head {
+  margin-bottom: 18px;
+}
+
+.goal-chip {
+  padding: 12px 16px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.goal-chip.active {
+  background: linear-gradient(135deg, rgba(109,124,255,0.28), rgba(67,216,178,0.18));
+  border-color: rgba(109,124,255,0.32);
+}
+
+.demo-hints {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 22px;
+}
+
+.hint-card {
+  padding: 16px;
+}
+
+.demo-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.demo-phone {
+  position: relative;
+}
+
+.live-badge,
+.match-result-badge,
+.step-pill,
+.dashboard-state,
+.match-score {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.83rem;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.live-badge,
+.match-result-badge,
+.step-pill,
+.dashboard-state {
+  background: rgba(97, 240, 194, 0.1);
+  color: #96f6db;
+}
+
+.demo-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.demo-profile-card {
+  padding: 16px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+}
+
+.demo-profile-top h3 {
+  margin: 0 0 4px;
+}
+
+.match-score {
+  margin-left: auto;
+  background: rgba(109,124,255,0.14);
+  color: #d9e3ff;
+}
+
+.comment-box {
+  margin-top: 16px;
+}
+
+.comment-box label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.quick-comments {
+  margin-top: 10px;
+}
+
+.quick-comment {
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.demo-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.demo-btn {
+  padding: 13px 16px;
+  border-radius: 14px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.demo-btn-like {
+  background: rgba(255,255,255,0.08);
+}
+
+.match-result,
+.demo-finish {
+  padding: 16px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(97,240,194,0.12), rgba(109,124,255,0.12));
+  border: 1px solid rgba(97,240,194,0.18);
+}
+
+.match-result h4,
+.demo-finish h4 {
+  margin: 10px 0 8px;
+}
+
+.match-contact {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.07);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.flow-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.flow-card {
+  min-height: 100%;
+}
+
+.dashboard-preview {
+  margin-top: 22px;
+}
+
+.dashboard-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+.audience-grid,
+.contact-grid {
+  grid-template-columns: 0.96fr 1.04fr;
+  align-items: start;
+}
+
+.list-check {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 16px;
+}
+
+.list-check li,
+.fit-row p {
+  line-height: 1.65;
+}
+
+.list-check li {
+  position: relative;
+  padding-left: 28px;
+}
+
+.list-check li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  box-shadow: 0 0 0 6px rgba(109, 124, 255, 0.08);
+}
+
+.fit-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.fit-row {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.fit-row strong {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.muted-row {
+  background: rgba(255,255,255,0.04);
+}
+
+.form-card {
+  display: grid;
+  gap: 18px;
+}
+
+.form-row label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.two-cols {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.footer {
+  padding: 30px 0 44px;
+}
+
+.footer-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.footer-brand {
+  margin-bottom: 10px;
+}
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1200px) {
+  .hero-grid,
+  .demo-grid,
+  .audience-grid,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .showcase-grid,
+  .benefits-grid,
+  .flow-layout,
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-showcase,
+  .demo-phone {
+    max-width: 900px;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+  }
+
+  .hero {
+    padding-top: 52px;
+  }
+
+  .hero-metrics,
+  .benefits-grid,
+  .dashboard-grid,
+  .flow-layout,
+  .showcase-grid,
+  .two-cols,
+  .demo-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .phone-shell,
+  .demo-chat-phone {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .section {
+    padding: 76px 0;
+  }
+
+  .container {
+    width: min(calc(100% - 24px), var(--container));
+  }
+
+  .nav {
+    min-height: 72px;
+  }
+
+  .btn,
+  .btn-sm,
+  .goal-chip,
+  .quick-comment,
+  .demo-btn {
+    width: 100%;
+  }
+
+  .hero-actions,
+  .contact-actions,
+  .goal-group,
+  .quick-comments,
+  .demo-actions,
+  .footer-links,
+  .nav-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .demo-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .feature-card,
+  .demo-panel,
+  .demo-phone,
+  .flow-card,
+  .fit-card,
+  .form-card,
+  .dashboard-preview,
+  .hero-showcase,
+  .phone-screen,
+  .demo-screen {
+    padding: 20px;
+  }
+
+  .phone-shell,
+  .demo-chat-phone {
+    padding: 10px;
+    border-radius: 28px;
+  }
+
+  .footer-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-copy h1 {
+    font-size: 2.3rem;
+  }
+
+  .section-head h2 {
+    font-size: 1.9rem;
+  }
+
+  .demo-stats,
+  .hero-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .mini-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
+</head>
+<body>
+  <div class="site-glow glow-1"></div>
+  <div class="site-glow glow-2"></div>
+  <div class="site-grid"></div>
+
+  <header class="header">
+    <div class="container nav">
+      <a class="brand" href="#hero" aria-label="Комьюнити">
+        <span class="brand-mark">C</span>
+        <span class="brand-text">Комьюнити</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Основная навигация">
+        <a href="#about">О проекте</a>
+        <a href="#demo">Мини‑демо</a>
+        <a href="#visual">Визуализация</a>
+        <a href="#contact">Заявка</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="https://t.me/luchinson" target="_blank" rel="noopener noreferrer">Telegram</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero section" id="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy" data-reveal>
+          <span class="eyebrow">Telegram-first • EventTech • CommunityTech</span>
+          <h1>Полезный нетворкинг, который можно запустить <span>без отдельного приложения</span></h1>
+          <p class="lead">
+            Комьюнити помогает организаторам мероприятий и сообществ переводить хаотичные знакомства в понятную механику:
+            профили участников, умные мэтчи, безопасный обмен контактами и аналитика после запуска.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contact">Оставить заявку</a>
+            <a class="btn btn-secondary" href="#demo">Попробовать демо</a>
+          </div>
+
+          <div class="hero-metrics">
+            <article class="metric-chip">
+              <strong>1–2 дня</strong>
+              <span>быстрый запуск под событие</span>
+            </article>
+            <article class="metric-chip">
+              <strong>Telegram</strong>
+              <span>привычный интерфейс для участника</span>
+            </article>
+            <article class="metric-chip">
+              <strong>Метрики</strong>
+              <span>активации, анкеты, мэтчи, взаимодействия</span>
+            </article>
+          </div>
+        </div>
+
+        <div class="hero-showcase card" data-reveal>
+          <div class="showcase-topbar">
+            <span class="signal signal-green"></span>
+            <span class="signal signal-yellow"></span>
+            <span class="signal signal-red"></span>
+            <p>Сценарий участника</p>
+          </div>
+
+          <div class="showcase-grid">
+            <div class="phone-shell">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="bubble bubble-bot">Привет! Помогу найти полезные знакомства на вашем мероприятии.</div>
+                <div class="bubble bubble-bot">Заполни профиль и выбери, кого ищешь: партнёров, клиентов, инвесторов или спикеров.</div>
+                <div class="bubble bubble-user">Ищу партнёров и клиентов для B2B-сервиса.</div>
+
+                <div class="mini-profile">
+                  <div class="mini-avatar">AM</div>
+                  <div>
+                    <strong>Анна М.</strong>
+                    <p>HRD • EdTech • Москва</p>
+                  </div>
+                </div>
+
+                <div class="mini-tags">
+                  <span>B2B</span>
+                  <span>Партнёрства</span>
+                  <span>Корпоративные клиенты</span>
+                </div>
+
+                <div class="mini-actions">
+                  <button type="button">Пропустить</button>
+                  <button type="button" class="active">Лайк + комментарий</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="showcase-side">
+              <div class="floating-card soft-card">
+                <p>После запуска организатор получает</p>
+                <strong>аналитику и отчёт</strong>
+                <ul>
+                  <li>активация участников</li>
+                  <li>заполнение профилей</li>
+                  <li>лайки и мэтчи</li>
+                  <li>повторные касания после события</li>
+                </ul>
+              </div>
+              <div class="chart-card soft-card">
+                <div class="bar bar-1"></div>
+                <div class="bar bar-2"></div>
+                <div class="bar bar-3"></div>
+                <div class="bar bar-4"></div>
+                <span>Пример динамики вовлечения</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow">О проекте</span>
+          <h2>Что именно делает решение</h2>
+          <p>
+            Комьюнити — это Telegram-бот для управляемого нетворкинга на мероприятиях и в бизнес-сообществах.
+            Участники быстрее находят релевантные контакты, а организатор получает не просто чат, а рабочую механику взаимодействий и измеримый результат.
+          </p>
+        </div>
+
+        <div class="benefits-grid">
+          <article class="feature-card card" data-reveal>
+            <div class="feature-icon">⚡</div>
+            <h3>Низкий порог входа</h3>
+            <p>Пользователь не скачивает новое приложение — всё работает внутри Telegram.</p>
+          </article>
+          <article class="feature-card card" data-reveal>
+            <div class="feature-icon">🎯</div>
+            <h3>Знакомства по задаче</h3>
+            <p>Профили, лайки, комментарии и мэтчи помогают находить нужных людей быстрее и точнее.</p>
+          </article>
+          <article class="feature-card card" data-reveal>
+            <div class="feature-icon">🔒</div>
+            <h3>Контакты только по согласию</h3>
+            <p>Обмен контактами происходит при взаимном интересе, что делает механику безопаснее и комфортнее.</p>
+          </article>
+          <article class="feature-card card" data-reveal>
+            <div class="feature-icon">📊</div>
+            <h3>Данные для организатора</h3>
+            <p>После запуска остаются цифры по активации, анкетам, лайкам, мэтчам и полезности внедрения.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-accent" id="demo">
+      <div class="container demo-section">
+        <div class="section-head demo-head" data-reveal>
+          <span class="eyebrow">Интерактивный мини‑тест</span>
+          <h2>Попробуйте механику прямо на сайте</h2>
+          <p>
+            Ниже — мини-симулятор сценария участника. Выберите цель знакомства и пролистайте несколько анкет.
+            Демо работает и на компьютере, и на телефоне.
+          </p>
+        </div>
+
+        <div class="demo-grid">
+          <aside class="demo-panel card" data-reveal>
+            <div class="demo-panel-head">
+              <h3>Настройка сценария</h3>
+              <p>Выберите, кого вы ищете на мероприятии.</p>
+            </div>
+
+            <div class="goal-group" id="goal-group">
+              <button type="button" class="goal-chip active" data-goal="Партнёры">Партнёры</button>
+              <button type="button" class="goal-chip" data-goal="Клиенты">Клиенты</button>
+              <button type="button" class="goal-chip" data-goal="Спикеры">Спикеры</button>
+              <button type="button" class="goal-chip" data-goal="Инвесторы">Инвесторы</button>
+            </div>
+
+            <div class="demo-hints">
+              <div class="hint-card soft-card">
+                <strong>Как тестировать</strong>
+                <p>Нажимайте «Пропустить», «Лайк» или «Лайк + комментарий» и смотрите, как меняется статистика.</p>
+              </div>
+              <div class="hint-card soft-card">
+                <strong>Что показывает демо</strong>
+                <p>Как участник знакомится с анкетами, получает мэтч и как аналитика обновляется для организатора.</p>
+              </div>
+            </div>
+
+            <div class="demo-stats" id="demo-stats">
+              <article class="stat-box">
+                <span>Просмотрено</span>
+                <strong id="stat-viewed">1</strong>
+              </article>
+              <article class="stat-box">
+                <span>Лайки</span>
+                <strong id="stat-liked">0</strong>
+              </article>
+              <article class="stat-box">
+                <span>Мэтчи</span>
+                <strong id="stat-matched">0</strong>
+              </article>
+              <article class="stat-box">
+                <span>Контакты</span>
+                <strong id="stat-contacts">0</strong>
+              </article>
+            </div>
+          </aside>
+
+          <div class="demo-phone card" data-reveal>
+            <div class="demo-phone-topbar">
+              <strong>Interactive Demo</strong>
+              <span class="live-badge">live</span>
+            </div>
+
+            <div class="demo-chat-phone">
+              <div class="phone-screen demo-screen">
+                <div class="bubble bubble-bot">Вы ищете: <span id="active-goal-label">Партнёры</span></div>
+                <div class="bubble bubble-bot">Посмотрите анкету и выберите действие.</div>
+
+                <article class="demo-profile-card" id="demo-profile-card">
+                  <div class="demo-profile-top">
+                    <div class="avatar-badge" id="demo-avatar">ЕК</div>
+                    <div>
+                      <h3 id="demo-name">Екатерина</h3>
+                      <p id="demo-role">Founder • HR Tech • Москва</p>
+                    </div>
+                    <div class="match-score" id="match-score">92%</div>
+                  </div>
+
+                  <div class="demo-tags" id="demo-tags"></div>
+                  <p class="demo-bio" id="demo-bio"></p>
+
+                  <div class="comment-box">
+                    <label for="demo-comment">Комментарий к лайку</label>
+                    <textarea id="demo-comment" rows="3" placeholder="Например: вижу потенциал для коллаборации по B2B-направлению"></textarea>
+                    <div class="quick-comments">
+                      <button type="button" class="quick-comment">Есть идея коллаборации</button>
+                      <button type="button" class="quick-comment">Ищем похожих партнёров</button>
+                      <button type="button" class="quick-comment">Интересен созвон после события</button>
+                    </div>
+                  </div>
+                </article>
+
+                <div class="demo-actions">
+                  <button type="button" class="demo-btn demo-btn-muted" id="skip-btn">Пропустить</button>
+                  <button type="button" class="demo-btn demo-btn-like" id="like-btn">Лайк</button>
+                  <button type="button" class="demo-btn demo-btn-primary" id="comment-btn">Лайк + комментарий</button>
+                </div>
+
+                <div class="match-result hidden" id="match-result" aria-live="polite">
+                  <span class="match-result-badge">Мэтч</span>
+                  <h4 id="match-name">Анкета совпала</h4>
+                  <p id="match-text">Контакты открыты по взаимному интересу.</p>
+                  <div class="match-contact" id="match-contact"></div>
+                </div>
+
+                <div class="demo-finish hidden" id="demo-finish">
+                  <h4>Демо завершено</h4>
+                  <p>Вы просмотрели все анкеты этого мини-сценария. Перезапустите демо, чтобы попробовать другую цель поиска.</p>
+                  <button type="button" class="btn btn-primary btn-block" id="restart-demo">Запустить ещё раз</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="visual">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <span class="eyebrow">Визуализация решения</span>
+          <h2>Как устроен путь от подключения до отчёта</h2>
+          <p>Сайт объясняет не только ценность, но и сам продуктовый поток — это помогает быстрее донести механику до клиента.</p>
+        </div>
+
+        <div class="flow-layout">
+          <div class="flow-card card" data-reveal>
+            <span class="step-pill">Шаг 1</span>
+            <h3>Организатор подключает сервис</h3>
+            <p>Под событие, форум, клуб или корпоративный чат выбирается сценарий запуска и параметры модерации.</p>
+          </div>
+          <div class="flow-card card" data-reveal>
+            <span class="step-pill">Шаг 2</span>
+            <h3>Участник заполняет профиль</h3>
+            <p>Имя, роль, описание, интересы, фото и цель знакомства — без отдельного приложения.</p>
+          </div>
+          <div class="flow-card card" data-reveal>
+            <span class="step-pill">Шаг 3</span>
+            <h3>Бот показывает релевантные анкеты</h3>
+            <p>Лайки, комментарии, пропуски и взаимные мэтчи переводят нетворкинг в понятную и повторяемую механику.</p>
+          </div>
+          <div class="flow-card card" data-reveal>
+            <span class="step-pill">Шаг 4</span>
+            <h3>Организатор получает аналитику</h3>
+            <p>Активация, заполнение профилей, лайки, мэтчи и вовлечённость становятся видимыми и пригодными для продажи следующего запуска.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-preview card" data-reveal>
+          <div class="dashboard-head">
+            <div>
+              <span class="eyebrow small">Organizer view</span>
+              <h3>Пример дашборда после запуска</h3>
+            </div>
+            <div class="dashboard-state">Отчёт готов</div>
+          </div>
+
+          <div class="dashboard-grid">
+            <article class="dashboard-box">
+              <span>Регистрации</span>
+              <strong>128</strong>
+            </article>
+            <article class="dashboard-box">
+              <span>Профили заполнены</span>
+              <strong>96%</strong>
+            </article>
+            <article class="dashboard-box">
+              <span>Взаимные мэтчи</span>
+              <strong>214</strong>
+            </article>
+            <article class="dashboard-box">
+              <span>Контакты открыты</span>
+              <strong>148</strong>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-accent" id="audience">
+      <div class="container audience-grid">
+        <div data-reveal>
+          <span class="eyebrow">Для кого</span>
+          <h2>Где решение особенно полезно</h2>
+          <ul class="list-check">
+            <li>Бизнес-мероприятия, форумы, конференции и выставки</li>
+            <li>Бизнес-клубы и профессиональные сообщества с активным Telegram-чатом</li>
+            <li>Корпоративные события, где нужно усиливать полезные знакомства между участниками</li>
+            <li>Пилотные запуски для проверки продуктовой ценности и дальнейшего масштабирования</li>
+          </ul>
+        </div>
+
+        <div class="fit-card card" data-reveal>
+          <span class="eyebrow">Квалификация лида</span>
+          <h3>Лучше всего подходит</h3>
+          <div class="fit-list">
+            <div class="fit-row">
+              <strong>Подходит</strong>
+              <p>мероприятиям от 150 участников, Telegram-сообществам и клиентам, которым важны метрики и качество знакомств</p>
+            </div>
+            <div class="fit-row muted-row">
+              <strong>Не фокус</strong>
+              <p>событиям до 100 человек и кейсам, где нужен только самый дешёвый инструмент без обсуждения результата</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="container contact-grid">
+        <div data-reveal>
+          <span class="eyebrow">Связаться</span>
+          <h2>Обсудим запуск под ваше событие или сообщество</h2>
+          <p class="contact-text">
+            Можно написать напрямую в Telegram или заполнить форму ниже — сайт откроет чат с уже подготовленным текстом заявки на <strong>@luchinson</strong>.
+          </p>
+
+          <div class="contact-actions">
+            <a class="btn btn-primary" href="https://t.me/luchinson" target="_blank" rel="noopener noreferrer">Написать в Telegram</a>
+            <a class="btn btn-secondary" href="#request-form">Заполнить форму</a>
+          </div>
+
+          <div class="contact-card soft-card">
+            <strong>Что удобно указать в заявке</strong>
+            <p>Название события или сообщества, размер аудитории, цель внедрения и ваш Telegram для связи.</p>
+          </div>
+        </div>
+
+        <form class="form-card card" id="request-form" data-reveal>
+          <div class="form-row two-cols">
+            <div>
+              <label for="name">Имя</label>
+              <input id="name" name="name" type="text" placeholder="Например, Егор" required />
+            </div>
+            <div>
+              <label for="telegram">Ваш Telegram</label>
+              <input id="telegram" name="telegram" type="text" placeholder="@username" required />
+            </div>
+          </div>
+
+          <div class="form-row two-cols">
+            <div>
+              <label for="company">Компания / сообщество</label>
+              <input id="company" name="company" type="text" placeholder="Название проекта" required />
+            </div>
+            <div>
+              <label for="size">Формат и размер</label>
+              <select id="size" name="size" required>
+                <option value="" selected disabled>Выберите формат</option>
+                <option>100–300 участников</option>
+                <option>300–1000 участников</option>
+                <option>1000+ участников</option>
+                <option>Telegram-сообщество</option>
+                <option>Корпоративное событие</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="task">Какая задача у вас сейчас</label>
+            <textarea id="task" name="task" rows="4" placeholder="Например: повысить вовлечённость на конференции и собрать аналитику по нетворкингу" required></textarea>
+          </div>
+
+          <button class="btn btn-primary btn-block" type="submit">Открыть Telegram с заявкой</button>
+          <p class="form-hint" id="form-hint">После отправки откроется Telegram с готовым текстом. На мобильном и на компьютере сценарий одинаковый.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-wrap">
+      <div>
+        <a class="brand footer-brand" href="#hero">
+          <span class="brand-mark">C</span>
+          <span class="brand-text">Комьюнити</span>
+        </a>
+        <p>Telegram-сервис для управляемого нетворкинга на мероприятиях и в сообществах.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#demo">Мини‑демо</a>
+        <a href="#visual">Визуализация</a>
+        <a href="#contact">Оставить заявку</a>
+        <a href="https://t.me/luchinson" target="_blank" rel="noopener noreferrer">@luchinson</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+const TELEGRAM_USERNAME = 'luchinson';
+
+const profiles = [
+  {
+    name: 'Екатерина К.',
+    initials: 'ЕК',
+    role: 'Founder • HR Tech • Москва',
+    bio: 'Строит B2B-сервис для HR-команд. Ищет партнёров для совместных запусков и интеграций.',
+    tags: ['HR Tech', 'B2B', 'Партнёрства'],
+    goals: ['Партнёры', 'Клиенты'],
+    score: 92,
+    telegram: '@ek_hrtech',
+    matchOn: ['Партнёры']
+  },
+  {
+    name: 'Илья С.',
+    initials: 'ИС',
+    role: 'BD • Event Agency • Санкт-Петербург',
+    bio: 'Запускает деловые события и ищет клиентов и подрядчиков для новых форматов вовлечения.',
+    tags: ['Event', 'B2B', 'Продажи'],
+    goals: ['Клиенты', 'Партнёры'],
+    score: 89,
+    telegram: '@ilya_events',
+    matchOn: ['Клиенты']
+  },
+  {
+    name: 'Мария Т.',
+    initials: 'МТ',
+    role: 'Program Lead • Conference Team • Казань',
+    bio: 'Собирает сильных спикеров и ищет людей, которые усиливают программу и опыт участников.',
+    tags: ['Конференции', 'Спикеры', 'Программа'],
+    goals: ['Спикеры', 'Партнёры'],
+    score: 94,
+    telegram: '@maria_program',
+    matchOn: ['Спикеры']
+  },
+  {
+    name: 'Андрей В.',
+    initials: 'АВ',
+    role: 'Angel Investor • SaaS • Екатеринбург',
+    bio: 'Инвестирует в ранние B2B- и community-tech решения. Любит короткие понятные пилоты и метрики.',
+    tags: ['Инвестиции', 'SaaS', 'Go-to-market'],
+    goals: ['Инвесторы'],
+    score: 91,
+    telegram: '@andrey_seed',
+    matchOn: ['Инвесторы']
+  },
+  {
+    name: 'Наталья П.',
+    initials: 'НП',
+    role: 'Community Lead • B2B Club • Новосибирск',
+    bio: 'Развивает бизнес-клуб и ищет инструменты, которые усиливают полезные знакомства и удержание участников.',
+    tags: ['Комьюнити', 'Retention', 'Telegram'],
+    goals: ['Клиенты', 'Партнёры'],
+    score: 87,
+    telegram: '@nataly_club',
+    matchOn: ['Клиенты', 'Партнёры']
+  }
+];
+
+let currentGoal = 'Партнёры';
+let currentDeck = [];
+let currentIndex = 0;
+let stats = {
+  viewed: 1,
+  liked: 0,
+  matched: 0,
+  contacts: 0,
+};
+
+const byId = (id) => document.getElementById(id);
+
+const form = byId('request-form');
+const hint = byId('form-hint');
+const goalGroup = byId('goal-group');
+const activeGoalLabel = byId('active-goal-label');
+const demoComment = byId('demo-comment');
+const matchResult = byId('match-result');
+const demoFinish = byId('demo-finish');
+
+const statViewed = byId('stat-viewed');
+const statLiked = byId('stat-liked');
+const statMatched = byId('stat-matched');
+const statContacts = byId('stat-contacts');
+
+const demoAvatar = byId('demo-avatar');
+const demoName = byId('demo-name');
+const demoRole = byId('demo-role');
+const matchScore = byId('match-score');
+const demoTags = byId('demo-tags');
+const demoBio = byId('demo-bio');
+const matchName = byId('match-name');
+const matchText = byId('match-text');
+const matchContact = byId('match-contact');
+const demoProfileCard = byId('demo-profile-card');
+
+const normalizeTelegram = (value) => {
+  const trimmed = value.trim();
+  if (!trimmed) return '';
+  return trimmed.startsWith('@') ? trimmed : `@${trimmed}`;
+};
+
+const sortDeckForGoal = (goal) => {
+  return [...profiles].sort((a, b) => {
+    const aRelevant = a.goals.includes(goal) ? 1 : 0;
+    const bRelevant = b.goals.includes(goal) ? 1 : 0;
+    if (aRelevant !== bRelevant) return bRelevant - aRelevant;
+    return b.score - a.score;
+  });
+};
+
+const updateStats = () => {
+  statViewed.textContent = String(stats.viewed);
+  statLiked.textContent = String(stats.liked);
+  statMatched.textContent = String(stats.matched);
+  statContacts.textContent = String(stats.contacts);
+};
+
+const hideOutcomeBlocks = () => {
+  matchResult.classList.add('hidden');
+  demoFinish.classList.add('hidden');
+};
+
+const renderProfile = () => {
+  hideOutcomeBlocks();
+
+  const profile = currentDeck[currentIndex];
+  if (!profile) {
+    demoProfileCard.classList.add('hidden');
+    demoFinish.classList.remove('hidden');
+    return;
+  }
+
+  demoProfileCard.classList.remove('hidden');
+  activeGoalLabel.textContent = currentGoal;
+  demoAvatar.textContent = profile.initials;
+  demoName.textContent = profile.name;
+  demoRole.textContent = profile.role;
+  matchScore.textContent = `${profile.score}%`;
+  demoBio.textContent = profile.bio;
+  demoTags.innerHTML = profile.tags.map((tag) => `<span>${tag}</span>`).join('');
+  demoComment.value = '';
+};
+
+const showMatch = (profile, withComment = false) => {
+  const comment = demoComment.value.trim();
+  matchResult.classList.remove('hidden');
+  matchName.textContent = `Мэтч с ${profile.name}`;
+  matchText.textContent = withComment && comment
+    ? `Комментарий отправлен: «${comment}». Контакты открыты по взаимному интересу.`
+    : 'Контакты открыты по взаимному интересу. Теперь можно продолжить общение уже вне сценария мэтчинга.';
+  matchContact.textContent = `Telegram: ${profile.telegram}`;
+};
+
+const nextProfile = () => {
+  currentIndex += 1;
+  stats.viewed = Math.min(currentDeck.length, currentIndex + 1);
+  updateStats();
+  renderProfile();
+};
+
+const handleAction = (type) => {
+  const profile = currentDeck[currentIndex];
+  if (!profile) return;
+
+  const isPositive = type === 'like' || type === 'comment';
+  const isMatch = isPositive && profile.matchOn.includes(currentGoal);
+
+  if (isPositive) {
+    stats.liked += 1;
+  }
+
+  if (isMatch) {
+    stats.matched += 1;
+    stats.contacts += 1;
+    updateStats();
+    showMatch(profile, type === 'comment');
+    window.setTimeout(nextProfile, 1150);
+    return;
+  }
+
+  updateStats();
+  nextProfile();
+};
+
+const resetDemo = (goal = currentGoal) => {
+  currentGoal = goal;
+  currentDeck = sortDeckForGoal(goal);
+  currentIndex = 0;
+  stats = { viewed: 1, liked: 0, matched: 0, contacts: 0 };
+  updateStats();
+  renderProfile();
+
+  document.querySelectorAll('.goal-chip').forEach((button) => {
+    button.classList.toggle('active', button.dataset.goal === goal);
+  });
+};
+
+const initReveal = () => {
+  const revealItems = document.querySelectorAll('[data-reveal]');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.16 }
+  );
+
+  revealItems.forEach((item) => observer.observe(item));
+};
+
+form?.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(form);
+  const name = (formData.get('name') || '').toString().trim();
+  const company = (formData.get('company') || '').toString().trim();
+  const telegram = normalizeTelegram((formData.get('telegram') || '').toString());
+  const size = (formData.get('size') || '').toString().trim();
+  const task = (formData.get('task') || '').toString().trim();
+
+  if (!name || !company || !telegram || !size || !task) {
+    hint.textContent = 'Пожалуйста, заполните все поля формы.';
+    return;
+  }
+
+  const message = [
+    'Здравствуйте! Хочу оставить заявку на подключение.',
+    '',
+    `Имя: ${name}`,
+    `Компания / сообщество: ${company}`,
+    `Telegram для связи: ${telegram}`,
+    `Формат / размер: ${size}`,
+    `Задача: ${task}`,
+  ].join('\n');
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(message);
+    }
+  } catch (error) {
+    console.warn('Clipboard copy failed:', error);
+  }
+
+  hint.textContent = 'Готово: открываем Telegram с подготовленным текстом заявки. Если сообщение не вставится автоматически, просто вставьте текст из буфера обмена.';
+
+  const telegramUrl = `https://t.me/${TELEGRAM_USERNAME}?text=${encodeURIComponent(message)}`;
+  window.open(telegramUrl, '_blank', 'noopener');
+});
+
+byId('skip-btn')?.addEventListener('click', () => handleAction('skip'));
+byId('like-btn')?.addEventListener('click', () => handleAction('like'));
+byId('comment-btn')?.addEventListener('click', () => handleAction('comment'));
+byId('restart-demo')?.addEventListener('click', () => resetDemo(currentGoal));
+
+goalGroup?.addEventListener('click', (event) => {
+  const target = event.target.closest('.goal-chip');
+  if (!target) return;
+  resetDemo(target.dataset.goal);
+});
+
+document.querySelectorAll('.quick-comment').forEach((button) => {
+  button.addEventListener('click', () => {
+    demoComment.value = button.textContent.trim();
+    demoComment.focus();
+  });
+});
+
+initReveal();
+resetDemo('Партнёры');
+
+</script>
+</body>
+</html>
